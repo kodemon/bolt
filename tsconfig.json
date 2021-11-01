@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+
+    "allowSyntheticDefaultImports": true,
+    "useUnknownInCatchVariables": false,
+
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["es6"],
+    
+    "declaration": false
+  },
+  "exclude": ["node_modules"],
+  "include": ["src"]
+}
