@@ -1,0 +1,20 @@
+{
+  "name": "bolt",
+  "version": "1.0.0",
+  "description": "A small experimental second layer blockchain read index",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kodemon/bolt.git"
+  },
+  "keywords": [
+    "event-sourcing",
+    "blockchain"
+  ],
+  "author": "Christoffer Rødvik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kodemon/bolt/issues"
+  },
+  "homepage": "https://github.com/kodemon/bolt#readme"
+}
