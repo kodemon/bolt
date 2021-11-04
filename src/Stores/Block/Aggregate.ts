@@ -1,1 +1,1 @@
-export { Block } from "../../Types/Block";
+export { Block } from "../../Types/Blockchain";

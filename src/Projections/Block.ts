@@ -1,14 +1,17 @@
 import { project } from "cmdo-events";
 
-import { collection } from "../Lib/Collections";
+import { addresses } from "../Services/Address";
+import { blocks } from "../Services/Blocks";
+import { transactions } from "../Services/Transactions";
 import { BlockAdded } from "../Stores";
 
 project.on(BlockAdded, async ({ data }) => {
-  await collection.blocks.insertOne({ ...data });
-  for (const tx of data.tx) {
-    await collection.transactions.insertOne({
-      height: data.height,
-      ...tx
-    });
+  const block = { ...data };
+  await blocks.index(block);
+  for (const transaction of block.tx) {
+    await transactions.index(block, transaction);
+    for (const address of transactions.getTransactionAddresses(transaction.vout)) {
+      await addresses.index(address, transaction);
+    }
   }
 });

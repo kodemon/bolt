@@ -9,7 +9,10 @@ router.register([
   Route.post("/api/blocks", [
     async function ({ body }) {
       try {
-        return this.respond(await blocks.process(body));
+        for (const block of body) {
+          await blocks.add(block);
+        }
+        return this.respond();
       } catch (error) {
         return this.reject(500, error.message);
       }
@@ -40,6 +43,15 @@ router.register([
           return this.respond(await transactions.getByHeight(parseInt(filter)));
         }
         return this.respond(await transactions.getByAddress(filter));
+      } catch (error) {
+        return this.reject(500, error.message);
+      }
+    }
+  ]),
+  Route.put("/api/blocks/:hash/invalidate", [
+    async function ({ params: { hash } }) {
+      try {
+        return this.respond(await blocks.invalidate(hash));
       } catch (error) {
         return this.reject(500, error.message);
       }
