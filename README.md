@@ -12,7 +12,7 @@ Run the following commands to set things up:
 
 ```sh
 $ docker-compose up -d
-$ npm intall
+$ npm install
 ```
 
 ## Start
