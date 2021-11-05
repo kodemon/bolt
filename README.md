@@ -25,4 +25,4 @@ $ npm start
 
 ## TODO
 
- - [] Block invalidation and stream rehydration.
+ - [ ] Block invalidation and stream rehydration.
