@@ -25,6 +25,6 @@ $ npm start
 
 ## Known Performance Issues
 
- 1. When performing an initial get request response time of ~600ms is seen, subsequent requests are ~30ms.
-    a. After waiting for a few seconds ~600ms is seen again for the first query.
-    b. This is most likely a server connection setup issue.
+ - When performing an initial get request response time of ~600ms is seen, subsequent requests are ~30ms.
+   - After waiting for a few seconds ~600ms is seen again for the first query.
+   - This is most likely a server connection setup issue.
