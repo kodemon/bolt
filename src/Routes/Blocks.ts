@@ -30,19 +30,23 @@ router.register([
   Route.get("/api/blocks/:hash", [
     async function ({ params: { hash } }) {
       try {
-        return this.respond(await blocks.getByHash(hash));
+        const block = await blocks.getByHash(hash);
+        if (!block) {
+          return this.reject(404, "Block does not exist or has been removed");
+        }
+        return this.respond(block);
       } catch (error) {
         return this.reject(500, error.message);
       }
     }
   ]),
-  Route.get("/api/blocks/:filter/transactions", [
-    async function ({ params: { filter } }) {
+  Route.get("/api/blocks/:target/transactions", [
+    async function ({ params: { target } }) {
       try {
-        if (isNumber(filter)) {
-          return this.respond(await transactions.getByHeight(parseInt(filter)));
+        if (isNumber(target)) {
+          return this.respond(await transactions.getByHeight(parseInt(target)));
         }
-        return this.respond(await transactions.getByAddress(filter));
+        return this.respond(await transactions.getByHash(target));
       } catch (error) {
         return this.reject(500, error.message);
       }

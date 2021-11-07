@@ -4,14 +4,13 @@ export type Address = {
   address: string;
   meta: {
     transactions: number;
-    total: {
-      received: number;
-      sent: number;
-      balance: number;
-    };
   };
   transactions: {
     hash: string;
+    block: {
+      hash: string;
+      height: number;
+    };
     inputs: Transaction["vin"];
     outputs: Transaction["vout"];
   }[];

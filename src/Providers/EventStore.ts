@@ -8,7 +8,8 @@ export const store = new (class MongoEventStore extends Store<Event> {
   public async insert({ id, streams, event }: Descriptor) {
     const isDuplicate = await collection.events.count({
       streams: { $in: streams },
-      "event.data.hash": event.data.hash
+      "event.data.hash": event.data.hash,
+      "event.meta.created": event.meta.created
     });
     if (!isDuplicate) {
       return collection.events.insertOne({ id, streams, event });
@@ -22,9 +23,7 @@ export const store = new (class MongoEventStore extends Store<Event> {
         "event.meta.created": 1
       })
       .toArray()
-      .then((events) => {
-        return events.map((descriptor) => this.toEvent(descriptor));
-      });
+      .then((events) => events.map((descriptor) => this.toEvent(descriptor)));
   }
 
   public async outdated({ streams, event }: Descriptor) {
@@ -32,7 +31,11 @@ export const store = new (class MongoEventStore extends Store<Event> {
       streams: {
         $in: streams
       },
-      "event.data.hash": event.data.hash
+      "event.type": event.type,
+      "event.data.hash": event.data.hash,
+      "event.meta.created": {
+        $gt: event.meta.created
+      }
     });
     return count > 0;
   }

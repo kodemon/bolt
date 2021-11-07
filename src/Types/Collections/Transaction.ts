@@ -6,7 +6,6 @@ export type Transaction = {
     hash: string;
     height: number;
   };
-  addresses: string[];
   inputs: Blockchain.Transaction["vin"];
   outputs: Blockchain.Transaction["vout"];
 };

@@ -17,6 +17,10 @@ export const blocks = new (class Blocks {
     return stores.block.add(block);
   }
 
+  public async invalidate(hash: string) {
+    return stores.block.invalidate(hash);
+  }
+
   /*
    |--------------------------------------------------------------------------------
    | Index Operations
@@ -24,14 +28,11 @@ export const blocks = new (class Blocks {
    */
 
   public async index(block: Block) {
-    return collection.blocks.insertOne(block);
+    return collection.blocks.insertOne({ ...block });
   }
 
-  public async invalidate(hash: string) {
-    const block = await collection.blocks.findOne({ hash });
-    if (block) {
-      console.log("Invalidate block", block);
-    }
+  public async rollback({ hash }: Block) {
+    return collection.blocks.deleteOne({ hash });
   }
 
   /*

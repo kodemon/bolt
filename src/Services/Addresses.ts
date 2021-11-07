@@ -1,5 +1,5 @@
 import { collection } from "../Lib/Collections";
-import { Transaction } from "../Types/Blockchain";
+import { Block, Transaction } from "../Types/Blockchain";
 
 export const addresses = new (class Addresses {
   /*
@@ -8,7 +8,7 @@ export const addresses = new (class Addresses {
    |--------------------------------------------------------------------------------
    */
 
-  public async index(address: string, transaction: Transaction) {
+  public async index(address: string, block: Block, transaction: Transaction) {
     const record = await collection.addresses.findOne({ address });
     if (record) {
       return collection.addresses.updateOne(
@@ -20,6 +20,10 @@ export const addresses = new (class Addresses {
           $push: {
             transactions: {
               hash: transaction.hash,
+              block: {
+                hash: block.hash,
+                height: block.height
+              },
               inputs: transaction.vin,
               outputs: transaction.vout
             }
@@ -30,21 +34,36 @@ export const addresses = new (class Addresses {
     return collection.addresses.insertOne({
       address,
       meta: {
-        transactions: 1,
-        total: {
-          received: 0,
-          sent: 0,
-          balance: 0
-        }
+        transactions: 1
       },
       transactions: [
         {
           hash: transaction.hash,
+          block: {
+            hash: block.hash,
+            height: block.height
+          },
           inputs: transaction.vin,
           outputs: transaction.vout
         }
       ]
     });
+  }
+
+  public async rollback(address: string, { hash }: Transaction) {
+    return collection.addresses.updateOne(
+      { address },
+      {
+        $inc: {
+          "meta.transactions": -1
+        },
+        $pull: {
+          transactions: {
+            hash
+          }
+        }
+      }
+    );
   }
 
   /*
@@ -53,7 +72,7 @@ export const addresses = new (class Addresses {
    |--------------------------------------------------------------------------------
    */
 
-  public async getByAddress(address: string) {
-    return collection.addresses.find({ address }).toArray();
+  public async get(address: string) {
+    return collection.addresses.findOne({ address });
   }
 })();

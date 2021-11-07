@@ -5,14 +5,16 @@
  */
 
 import { BlockAdded } from "./Block/Events/BlockAdded";
+import { BlockInvalidated } from "./Block/Events/BlockInvalidated";
 
-export type Event = BlockAdded;
+export type Event = BlockAdded | BlockInvalidated;
 
 export const events = {
-  BlockAdded
+  BlockAdded,
+  BlockInvalidated
 };
 
-export { BlockAdded };
+export { BlockAdded, BlockInvalidated };
 
 /*
  |--------------------------------------------------------------------------------

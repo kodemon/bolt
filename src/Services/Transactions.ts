@@ -15,10 +15,13 @@ export const transactions = new (class Transactions {
         hash: block.hash,
         height: block.height
       },
-      addresses: this.getTransactionAddresses(transaction.vout),
       inputs: transaction.vin,
       outputs: transaction.vout
     });
+  }
+
+  public async rollback({ hash }: Block) {
+    return collection.transactions.deleteMany({ "block.hash": hash });
   }
 
   /*
@@ -27,12 +30,12 @@ export const transactions = new (class Transactions {
    |--------------------------------------------------------------------------------
    */
 
-  public async getByHeight(height: number) {
-    return collection.transactions.find({ "block.height": height }).toArray();
+  public async getByHash(hash: string) {
+    return collection.transactions.find({ "block.hash": hash }).toArray();
   }
 
-  public async getByAddress(address: string) {
-    return collection.transactions.find({ addresses: address }).toArray();
+  public async getByHeight(height: number) {
+    return collection.transactions.find({ "block.height": height }).toArray();
   }
 
   /*

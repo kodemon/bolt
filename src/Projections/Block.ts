@@ -1,17 +1,29 @@
-import { project } from "cmdo-events";
+import { projection } from "cmdo-events";
 
-import { addresses } from "../Services/Address";
+import { addresses } from "../Services/Addresses";
 import { blocks } from "../Services/Blocks";
 import { transactions } from "../Services/Transactions";
 import { BlockAdded } from "../Stores";
+import { BlockInvalidated } from "../Stores/Block/Events/BlockInvalidated";
 
-project.on(BlockAdded, async ({ data }) => {
-  const block = { ...data };
-  await blocks.index(block);
-  for (const transaction of block.tx) {
-    await transactions.index(block, transaction);
+projection.on(BlockAdded, async ({ data }) => {
+  console.log("Adding block", data.hash, data.height);
+  await blocks.index(data);
+  for (const transaction of data.tx) {
+    await transactions.index(data, transaction);
     for (const address of transactions.getTransactionAddresses(transaction.vout)) {
-      await addresses.index(address, transaction);
+      await addresses.index(address, data, transaction);
     }
   }
+});
+
+projection.on(BlockInvalidated, async ({ data }) => {
+  console.log("Invalidating block", data.hash, data.height);
+  for (const transaction of data.tx) {
+    for (const address of transactions.getTransactionAddresses(transaction.vout)) {
+      await addresses.rollback(address, transaction);
+    }
+  }
+  await transactions.rollback(data);
+  await blocks.rollback(data);
 });
