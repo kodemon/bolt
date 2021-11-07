@@ -23,6 +23,10 @@ Once docker is running the mongo container and dependencies are installed, we ca
 $ npm start
 ```
 
-## TODO
+## Known Performance Issues
 
- - [ ] Block invalidation and stream rehydration.
+ 1. Adding blocks is currently taking too long.
+    a. This should be optimized further, should be able to resolve it a lot faster.
+ 2. When performing an initial get request response time of ~600ms is seen, subsequent requests are ~30ms.
+    a. After waiting for a few seconds ~600ms is seen again for the first query.
+    b. This is most likely a server connection setup issue.
