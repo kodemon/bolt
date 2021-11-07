@@ -9,45 +9,28 @@ export const addresses = new (class Addresses {
    */
 
   public async index(address: string, block: Block, transaction: Transaction) {
-    const record = await collection.addresses.findOne({ address });
-    if (record) {
-      return collection.addresses.updateOne(
-        { address },
-        {
-          $inc: {
-            "meta.transactions": 1
-          },
-          $push: {
-            transactions: {
-              hash: transaction.hash,
-              block: {
-                hash: block.hash,
-                height: block.height
-              },
-              inputs: transaction.vin,
-              outputs: transaction.vout
-            }
+    return collection.addresses.updateOne(
+      { address },
+      {
+        $inc: {
+          "meta.transactions": 1
+        },
+        $push: {
+          transactions: {
+            hash: transaction.hash,
+            block: {
+              hash: block.hash,
+              height: block.height
+            },
+            inputs: transaction.vin,
+            outputs: transaction.vout
           }
         }
-      );
-    }
-    return collection.addresses.insertOne({
-      address,
-      meta: {
-        transactions: 1
       },
-      transactions: [
-        {
-          hash: transaction.hash,
-          block: {
-            hash: block.hash,
-            height: block.height
-          },
-          inputs: transaction.vin,
-          outputs: transaction.vout
-        }
-      ]
-    });
+      {
+        upsert: true
+      }
+    );
   }
 
   public async rollback(address: string, { hash }: Transaction) {
