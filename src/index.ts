@@ -52,7 +52,7 @@ async function providers(): Promise<void> {
  */
 
 async function routes() {
-  await Promise.all([import("./Routes/Addresses"), import("./Routes/Blocks")]);
+  await Promise.all([import("./Routes/Addresses"), import("./Routes/Blocks"), import("./Routes/Database")]);
 }
 
 /*

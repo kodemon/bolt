@@ -12,6 +12,14 @@ export const collection = {
   addresses: mongo.collection<Address>("addresses")
 };
 
+export async function dropDatabase() {
+  await collection.events.drop();
+  await collection.blocks.drop();
+  await collection.transactions.drop();
+  await collection.addresses.drop();
+  await setCollectionIndexes();
+}
+
 export async function setCollectionIndexes() {
   await setBlockIndexes();
   await setTransactionIndexes();
