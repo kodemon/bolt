@@ -28,3 +28,7 @@ $ npm start
  - When performing an initial get request response time of ~600ms is seen, subsequent requests are ~30ms.
    - After waiting for a few seconds ~600ms is seen again for the first query.
    - This is most likely a server connection setup issue.
+
+## Performance Results
+
+![bolt_performance](https://user-images.githubusercontent.com/1998130/140647191-6dfe54a1-4077-4819-9c0a-a905de294ce0.png)
