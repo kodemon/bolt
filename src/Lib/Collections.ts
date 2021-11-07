@@ -13,10 +13,7 @@ export const collection = {
 };
 
 export async function dropDatabase() {
-  await collection.events.drop();
-  await collection.blocks.drop();
-  await collection.transactions.drop();
-  await collection.addresses.drop();
+  await Promise.all(Object.values(collection).map((collection) => collection.drop()));
   await setCollectionIndexes();
 }
 
